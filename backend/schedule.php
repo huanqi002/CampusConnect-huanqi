@@ -55,7 +55,7 @@ include 'header.php';
     </div>
 </form>
 
-<script src="js/script.js"></script>
+<script src="../frontend/js/script.js"></script>
 <script>
     initScheduleForm(<?php echo (int)$request['volunteer_id']; ?>);
 </script>

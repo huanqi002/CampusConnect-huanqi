@@ -8,6 +8,11 @@ $DB_USER = 'root';
 $DB_PASS = '';
 $DB_NAME = 'support_system';
 
+$localConfig = __DIR__ . '/config.local.php';
+if (is_file($localConfig)) {
+    require $localConfig;
+}
+
 $conn = new mysqli($DB_HOST, $DB_USER, $DB_PASS, $DB_NAME);
 
 if ($conn->connect_error) {
