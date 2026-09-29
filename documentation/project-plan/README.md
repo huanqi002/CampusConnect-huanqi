@@ -6,7 +6,7 @@ Deliver a student support and volunteer platform for the BIT 216 project. The re
 
 ## Scope of This Module
 
-- Select a sample student or volunteer user.
+- Select, register, or log out of a sample student or volunteer user.
 - View accepted support requests and available sessions.
 - Schedule or cancel a session.
 - Mark a session complete and allow student feedback.

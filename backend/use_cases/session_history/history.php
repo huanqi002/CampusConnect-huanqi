@@ -1,28 +1,12 @@
 <?php
 require __DIR__ . '/../../general/config.php';
+require __DIR__ . '/../../general/user_profile.php';
+require __DIR__ . '/../../general/history.php';
 
-if (empty($_SESSION['user_id'])) {
-    header('Location: select_user.php');
-    exit;
-}
+requireLogin();
 
-$myId = $_SESSION['user_id'];
-
-$sql = "SELECT sr.subject, sr.status AS request_status,
-               us.name AS student_name, uv.name AS volunteer_name,
-               s.session_date, s.session_time, s.mode, s.status AS session_status,
-               f.rating, f.comments
-        FROM support_requests sr
-        JOIN users us ON sr.student_id = us.id
-        JOIN users uv ON sr.volunteer_id = uv.id
-        LEFT JOIN sessions s ON s.request_id = sr.id
-        LEFT JOIN feedback f ON f.session_id = s.id
-        WHERE sr.student_id = ? OR sr.volunteer_id = ?
-        ORDER BY s.session_date DESC, s.session_time DESC, sr.created_at DESC";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param('ii', $myId, $myId);
-$stmt->execute();
-$rows = $stmt->get_result();
+$myId = currentUser()['id'];
+$rows = fetchFullHistory($conn, $myId);
 
 include __DIR__ . '/../../general/header.php';
 ?>

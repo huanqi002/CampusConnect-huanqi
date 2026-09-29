@@ -1,4 +1,4 @@
-# Support Session Management Tests
+# Support Request Tests
 
 ## Local Setup
 
@@ -8,14 +8,9 @@ Follow the XAMPP setup in the root [README](../../../README.md), then use the sa
 
 | Scenario | Expected result |
 | --- | --- |
-| Open the user-selection page | Sample users are listed and the page styling loads. |
-| Select a student with an accepted request | The session page shows the request and available actions. |
+| Sign in as a student with an accepted request | The dashboard shows the request with a "Book a session" action. |
 | Schedule an available slot | The session is created and the slot is no longer offered. |
 | Attempt to book an unavailable slot | The booking is rejected and the user can choose another time. |
-| Cancel an eligible scheduled session | The session status changes to cancelled and the updated state is shown. |
-| Mark an eligible session complete as its volunteer | The status changes to completed. |
-| Submit valid feedback for a completed session | The rating and optional comment are saved once. |
-| Open session history | Previously scheduled and completed sessions are shown. |
 
 ## Evidence and Defects
 

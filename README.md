@@ -8,9 +8,11 @@ BIT 216 University Student Support and Volunteer Platform.
 Campus-Connect/
 |-- frontend/                 Shared CSS and browser JavaScript
 |-- backend/
-|   |-- general/              Shared PHP configuration and page layout
+|   |-- general/              Shared PHP configuration, page layout, and entity helpers
 |   `-- use_cases/
-|       `-- support_session_management/
+|       |-- user_management/      Login, registration, logout
+|       |-- support_request/      View accepted requests, schedule a session
+|       `-- session_history/      Cancel, complete, feedback, history
 |-- database/
 |   `-- general/schema.sql    Shared platform schema and sample data
 |-- documentation/
@@ -35,7 +37,7 @@ The current module lets students and volunteers schedule support sessions, manag
 3. Start Apache and MySQL from the XAMPP Control Panel.
 4. Import [`database/general/schema.sql`](database/general/schema.sql) in phpMyAdmin. It creates the shared `support_system` database and sample records.
 5. If your local MySQL credentials differ from XAMPP defaults, copy `backend/general/config.local.example.php` to `backend/general/config.local.php` and update the local values there. The local file is ignored by Git; never commit production credentials.
-6. Open `http://localhost/Campus-Connect/backend/use_cases/support_session_management/select_user.php` in a browser. Adjust `Campus-Connect` in the URL if the repository folder has a different name under `htdocs`.
+6. Open `http://localhost/Campus-Connect/backend/use_cases/user_management/select_user.php` in a browser. Adjust `Campus-Connect` in the URL if the repository folder has a different name under `htdocs`.
 
 ## Git Collaboration
 
@@ -51,8 +53,14 @@ See [`documentation/collaboration.md`](documentation/collaboration.md) for the t
 
 - [Project plan](documentation/project-plan/README.md)
 - [General requirements](documentation/requirements/README.md)
-- [Support Session Management requirements](documentation/requirements/use_cases/support_session_management.md)
+  - [User Management requirements](documentation/requirements/use_cases/user_management.md)
+  - [Support Request requirements](documentation/requirements/use_cases/support_request.md)
+  - [Session History requirements](documentation/requirements/use_cases/session_history.md)
 - [General design](documentation/design/README.md)
-- [Support Session Management design](documentation/design/use_cases/support_session_management.md)
+  - [User Management design](documentation/design/use_cases/user_management.md)
+  - [Support Request design](documentation/design/use_cases/support_request.md)
+  - [Session History design](documentation/design/use_cases/session_history.md)
 - [General testing guidance](documentation/testing/README.md)
-- [Support Session Management tests](documentation/testing/use_cases/support_session_management.md)
+  - [User Management tests](documentation/testing/use_cases/user_management.md)
+  - [Support Request tests](documentation/testing/use_cases/support_request.md)
+  - [Session History tests](documentation/testing/use_cases/session_history.md)

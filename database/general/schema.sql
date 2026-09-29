@@ -1,6 +1,6 @@
 -- ===================================================================
 -- Support Session Manager - Database Schema
--- Use Case 3: Manage Support Session and Provide Feedback
+-- Shared by the user_management, support_request, and session_history use cases.
 -- Import this file in phpMyAdmin (XAMPP) to create the database.
 -- ===================================================================
 

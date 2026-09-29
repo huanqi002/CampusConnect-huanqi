@@ -1,30 +1,15 @@
 <?php
 require __DIR__ . '/../../general/config.php';
+require __DIR__ . '/../../general/user_profile.php';
+require __DIR__ . '/../../general/history.php';
 
-if (empty($_SESSION['user_id'])) {
-    header('Location: select_user.php');
-    exit;
-}
+requireLogin();
 
-$myId   = $_SESSION['user_id'];
-$myRole = $_SESSION['role'];
+$me     = currentUser();
+$myId   = $me['id'];
+$myRole = $me['role'];
 
-$sql = "SELECT sr.id AS request_id, sr.subject, sr.status AS request_status,
-               sr.student_id, sr.volunteer_id,
-               us.name AS student_name, uv.name AS volunteer_name,
-               s.id AS session_id, s.session_date, s.session_time, s.mode, s.status AS session_status,
-               f.id AS feedback_id, f.rating
-        FROM support_requests sr
-        JOIN users us ON sr.student_id = us.id
-        JOIN users uv ON sr.volunteer_id = uv.id
-        LEFT JOIN sessions s ON s.id = (SELECT id FROM sessions WHERE request_id = sr.id ORDER BY id DESC LIMIT 1)
-        LEFT JOIN feedback f ON f.session_id = s.id
-        WHERE sr.student_id = ? OR sr.volunteer_id = ?
-        ORDER BY sr.created_at DESC";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param('ii', $myId, $myId);
-$stmt->execute();
-$rows = $stmt->get_result();
+$rows = fetchMyActivity($conn, $myId);
 
 include __DIR__ . '/../../general/header.php';
 ?>
@@ -64,12 +49,12 @@ include __DIR__ . '/../../general/header.php';
            &mdash; <?php echo htmlspecialchars($r['mode']); ?></p>
         <div class="btn-row">
             <?php if ($myRole === 'volunteer'): ?>
-            <form method="post" action="mark_completed.php" style="display:inline">
+            <form method="post" action="../session_history/mark_completed.php" style="display:inline">
                 <input type="hidden" name="session_id" value="<?php echo (int)$r['session_id']; ?>">
                 <button type="submit" class="btn btn-primary">Mark session as completed</button>
             </form>
             <?php endif; ?>
-            <form method="post" action="cancel_session.php" onsubmit="return confirm('Cancel this session?');" style="display:inline">
+            <form method="post" action="../session_history/cancel_session.php" onsubmit="return confirm('Cancel this session?');" style="display:inline">
                 <input type="hidden" name="session_id" value="<?php echo (int)$r['session_id']; ?>">
                 <button type="submit" class="btn btn-secondary">Cancel session</button>
             </form>
@@ -83,7 +68,7 @@ include __DIR__ . '/../../general/header.php';
             <p class="meta">Feedback given: <strong><?php echo (int)$r['rating']; ?> / 5</strong></p>
         <?php elseif ($myRole === 'student'): ?>
             <div class="btn-row">
-                <a class="btn btn-primary" href="feedback.php?session_id=<?php echo (int)$r['session_id']; ?>">Rate this session</a>
+                <a class="btn btn-primary" href="../session_history/feedback.php?session_id=<?php echo (int)$r['session_id']; ?>">Rate this session</a>
             </div>
         <?php else: ?>
             <p class="meta">Waiting for the student to leave feedback.</p>

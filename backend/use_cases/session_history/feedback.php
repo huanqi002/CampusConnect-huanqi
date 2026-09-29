@@ -1,26 +1,16 @@
 <?php
 require __DIR__ . '/../../general/config.php';
+require __DIR__ . '/../../general/session.php';
 
 if (empty($_SESSION['user_id']) || $_SESSION['role'] !== 'student') {
-    header('Location: index.php?err=' . urlencode('Only the student can leave feedback.'));
+    header('Location: ../support_request/index.php?err=' . urlencode('Only the student can leave feedback.'));
     exit;
 }
 
 $sessionId = isset($_GET['session_id']) ? (int)$_GET['session_id'] : 0;
 
-$stmt = $conn->prepare("SELECT s.*, sr.student_id, sr.subject, uv.name AS volunteer_name
-                         FROM sessions s
-                         JOIN support_requests sr ON s.request_id = sr.id
-                         JOIN users uv ON sr.volunteer_id = uv.id
-                         WHERE s.id = ?");
-$stmt->bind_param('i', $sessionId);
-$stmt->execute();
-$session = $stmt->get_result()->fetch_assoc();
-
-$existing = $conn->prepare("SELECT id FROM feedback WHERE session_id = ?");
-$existing->bind_param('i', $sessionId);
-$existing->execute();
-$alreadyGiven = $existing->get_result()->fetch_assoc();
+$session      = findSessionForFeedback($conn, $sessionId);
+$alreadyGiven = hasFeedback($conn, $sessionId);
 
 include __DIR__ . '/../../general/header.php';
 
@@ -30,11 +20,11 @@ if (!$session || $session['student_id'] != $_SESSION['user_id']) {
 } elseif ($session['status'] !== 'Completed') {
     echo '<h1>Feedback not available yet</h1>';
     echo '<div class="message message-error">You can only rate a session after it has been marked as completed.</div>';
-    echo '<a class="btn btn-plain" href="index.php">Back to my sessions</a>';
+    echo '<a class="btn btn-plain" href="../support_request/index.php">Back to my sessions</a>';
 } elseif ($alreadyGiven) {
     echo '<h1>Feedback already submitted</h1>';
     echo '<p>You have already rated this session. Thank you!</p>';
-    echo '<a class="btn btn-plain" href="index.php">Back to my sessions</a>';
+    echo '<a class="btn btn-plain" href="../support_request/index.php">Back to my sessions</a>';
 } else {
 ?>
     <h1>Rate your session</h1>
@@ -60,7 +50,7 @@ if (!$session || $session['student_id'] != $_SESSION['user_id']) {
 
         <div class="btn-row">
             <button type="submit" class="btn btn-primary">Submit feedback</button>
-            <a class="btn btn-plain" href="index.php">Cancel</a>
+            <a class="btn btn-plain" href="../support_request/index.php">Cancel</a>
         </div>
     </form>
 <?php

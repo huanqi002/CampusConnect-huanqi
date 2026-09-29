@@ -1,6 +1,7 @@
 <?php
 require __DIR__ . '/../../general/config.php';
-$result = $conn->query("SELECT id, name, role FROM users ORDER BY role, name");
+require __DIR__ . '/../../general/user_profile.php';
+$result = listUsers($conn);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -25,6 +26,7 @@ $result = $conn->query("SELECT id, name, role FROM users ORDER BY role, name");
         </a>
         <?php endwhile; ?>
     </div>
+    <p class="subtitle">Don't see your name? <a href="register.php">Register a new identity</a>.</p>
 </main>
 </body>
 </html>

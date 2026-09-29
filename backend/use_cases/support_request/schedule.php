@@ -1,21 +1,12 @@
 <?php
 require __DIR__ . '/../../general/config.php';
+require __DIR__ . '/../../general/user_profile.php';
+require __DIR__ . '/../../general/support_request.php';
 
-if (empty($_SESSION['user_id'])) {
-    header('Location: select_user.php');
-    exit;
-}
+requireLogin();
 
 $requestId = isset($_GET['request_id']) ? (int)$_GET['request_id'] : 0;
-
-$stmt = $conn->prepare("SELECT sr.*, us.name AS student_name, uv.name AS volunteer_name
-                         FROM support_requests sr
-                         JOIN users us ON sr.student_id = us.id
-                         JOIN users uv ON sr.volunteer_id = uv.id
-                         WHERE sr.id = ?");
-$stmt->bind_param('i', $requestId);
-$stmt->execute();
-$request = $stmt->get_result()->fetch_assoc();
+$request   = findSupportRequestById($conn, $requestId);
 
 if (!$request || $request['status'] !== 'Accepted') {
     header('Location: index.php?err=' . urlencode('This request is not ready to be scheduled.'));
