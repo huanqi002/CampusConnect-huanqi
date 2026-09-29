@@ -1,0 +1,68 @@
+<?php
+require 'config.php';
+
+if (empty($_SESSION['user_id']) || $_SESSION['role'] !== 'student') {
+    header('Location: index.php?err=' . urlencode('Only the student can leave feedback.'));
+    exit;
+}
+
+$sessionId = isset($_GET['session_id']) ? (int)$_GET['session_id'] : 0;
+
+$stmt = $conn->prepare("SELECT s.*, sr.student_id, sr.subject, uv.name AS volunteer_name
+                         FROM sessions s
+                         JOIN support_requests sr ON s.request_id = sr.id
+                         JOIN users uv ON sr.volunteer_id = uv.id
+                         WHERE s.id = ?");
+$stmt->bind_param('i', $sessionId);
+$stmt->execute();
+$session = $stmt->get_result()->fetch_assoc();
+
+$existing = $conn->prepare("SELECT id FROM feedback WHERE session_id = ?");
+$existing->bind_param('i', $sessionId);
+$existing->execute();
+$alreadyGiven = $existing->get_result()->fetch_assoc();
+
+include 'header.php';
+
+// Alternative course 9a: block feedback before the session is completed
+if (!$session || $session['student_id'] != $_SESSION['user_id']) {
+    echo '<div class="message message-error">Session not found.</div>';
+} elseif ($session['status'] !== 'Completed') {
+    echo '<h1>Feedback not available yet</h1>';
+    echo '<div class="message message-error">You can only rate a session after it has been marked as completed.</div>';
+    echo '<a class="btn btn-plain" href="index.php">Back to my sessions</a>';
+} elseif ($alreadyGiven) {
+    echo '<h1>Feedback already submitted</h1>';
+    echo '<p>You have already rated this session. Thank you!</p>';
+    echo '<a class="btn btn-plain" href="index.php">Back to my sessions</a>';
+} else {
+?>
+    <h1>Rate your session</h1>
+    <p class="subtitle"><?php echo htmlspecialchars($session['subject']); ?> with <?php echo htmlspecialchars($session['volunteer_name']); ?></p>
+
+    <?php if (isset($_GET['err'])): ?>
+    <div class="message message-error"><?php echo htmlspecialchars($_GET['err']); ?></div>
+    <?php endif; ?>
+
+    <form method="post" action="submit_feedback.php">
+        <input type="hidden" name="session_id" value="<?php echo (int)$session['id']; ?>">
+
+        <label>How helpful was this session?</label>
+        <div class="rating-choice">
+            <?php for ($i = 1; $i <= 5; $i++): ?>
+            <label><input type="radio" name="rating" value="<?php echo $i; ?>" required> <?php echo $i; ?></label>
+            <?php endfor; ?>
+        </div>
+        <p class="help-text">1 = not helpful, 5 = very helpful</p>
+
+        <label for="comments">Comments (optional)</label>
+        <textarea id="comments" name="comments" placeholder="What went well? What could be better?"></textarea>
+
+        <div class="btn-row">
+            <button type="submit" class="btn btn-primary">Submit feedback</button>
+            <a class="btn btn-plain" href="index.php">Cancel</a>
+        </div>
+    </form>
+<?php
+}
+include 'footer.php';
