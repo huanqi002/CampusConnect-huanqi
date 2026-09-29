@@ -1,5 +1,5 @@
 <?php
-require 'config.php';
+require __DIR__ . '/../../general/config.php';
 
 if (empty($_SESSION['user_id'])) {
     header('Location: select_user.php');
@@ -22,7 +22,7 @@ if (!$request || $request['status'] !== 'Accepted') {
     exit;
 }
 
-include 'header.php';
+include __DIR__ . '/../../general/header.php';
 ?>
 
 <h1>Book a session</h1>
@@ -55,9 +55,9 @@ include 'header.php';
     </div>
 </form>
 
-<script src="../frontend/js/script.js"></script>
+<script src="../../../frontend/js/script.js"></script>
 <script>
     initScheduleForm(<?php echo (int)$request['volunteer_id']; ?>);
 </script>
 
-<?php include 'footer.php'; ?>
+<?php include __DIR__ . '/../../general/footer.php'; ?>

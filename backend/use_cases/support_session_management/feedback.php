@@ -1,5 +1,5 @@
 <?php
-require 'config.php';
+require __DIR__ . '/../../general/config.php';
 
 if (empty($_SESSION['user_id']) || $_SESSION['role'] !== 'student') {
     header('Location: index.php?err=' . urlencode('Only the student can leave feedback.'));
@@ -22,7 +22,7 @@ $existing->bind_param('i', $sessionId);
 $existing->execute();
 $alreadyGiven = $existing->get_result()->fetch_assoc();
 
-include 'header.php';
+include __DIR__ . '/../../general/header.php';
 
 // Alternative course 9a: block feedback before the session is completed
 if (!$session || $session['student_id'] != $_SESSION['user_id']) {
@@ -65,4 +65,4 @@ if (!$session || $session['student_id'] != $_SESSION['user_id']) {
     </form>
 <?php
 }
-include 'footer.php';
+include __DIR__ . '/../../general/footer.php';

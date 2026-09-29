@@ -1,23 +1,12 @@
-# Design
+# General Design
 
-## Module Structure
+## Shared Boundaries
 
-- `frontend/` contains the stylesheet and browser-side scheduling helper.
-- `backend/` contains PHP pages, request handlers, and the database connection.
-- `database/db.sql` creates the schema and inserts a small sample dataset.
+- `frontend/` contains shared styles and browser helpers.
+- `backend/general/` contains reusable configuration and page layout.
+- `backend/use_cases/<use_case>/` contains one use case's pages and request handlers.
+- `database/general/schema.sql` is the shared platform schema; use cases must not maintain duplicate copies of shared tables.
 
-The PHP pages render the interface and process form submissions. The scheduling helper requests available times from the PHP JSON endpoint. Shared page markup is provided by PHP header and footer includes.
+Keep each use case cohesive within its own folder. Use cases may depend on shared components; shared components must not import or call use-case-specific code. Add cross-cutting design decisions here and use-case-specific flows and decisions in that use case's design document.
 
-## Data Model
-
-- `users` stores student and volunteer sample identities.
-- `support_requests` associates a student with an accepting volunteer.
-- `volunteer_availability` stores bookable time slots.
-- `sessions` stores bookings and their status.
-- `feedback` stores a rating and optional comment for a completed session.
-
-See [`database/db.sql`](../../database/db.sql) for the authoritative schema.
-
-## Design Decisions
-
-Keep this small module in the existing PHP/MySQL stack. Share the schema in version control, but use local database credentials for development and never commit production secrets. Record agreed changes to this design here.
+See [Support Session Management design](use_cases/support_session_management.md) for the current module.

@@ -1,5 +1,5 @@
 <?php
-require 'config.php';
+require __DIR__ . '/../../general/config.php';
 
 if (empty($_SESSION['user_id'])) {
     header('Location: select_user.php');
@@ -26,7 +26,7 @@ $stmt->bind_param('ii', $myId, $myId);
 $stmt->execute();
 $rows = $stmt->get_result();
 
-include 'header.php';
+include __DIR__ . '/../../general/header.php';
 ?>
 
 <h1>My sessions</h1>
@@ -98,4 +98,4 @@ include 'header.php';
 </div>
 <?php endwhile; ?>
 
-<?php include 'footer.php'; ?>
+<?php include __DIR__ . '/../../general/footer.php'; ?>

@@ -1,5 +1,5 @@
 <?php
-require 'config.php';
+require __DIR__ . '/../../general/config.php';
 $result = $conn->query("SELECT id, name, role FROM users ORDER BY role, name");
 ?>
 <!DOCTYPE html>
@@ -8,7 +8,7 @@ $result = $conn->query("SELECT id, name, role FROM users ORDER BY role, name");
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Support Session Manager - Select User</title>
-<link rel="stylesheet" href="../frontend/css/style.css">
+<link rel="stylesheet" href="../../../frontend/css/style.css">
 </head>
 <body>
 <header class="topbar">
