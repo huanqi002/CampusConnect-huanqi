@@ -1,5 +1,5 @@
 <?php
-require 'config.php';
+require __DIR__ . '/../../general/config.php';
 
 if (empty($_SESSION['user_id']) || $_SESSION['role'] !== 'student') {
     header('Location: index.php?err=' . urlencode('Only the student can leave feedback.'));

@@ -1,5 +1,5 @@
 <?php
-require 'config.php';
+require __DIR__ . '/../../general/config.php';
 header('Content-Type: application/json');
 
 $volunteerId = isset($_GET['volunteer_id']) ? (int)$_GET['volunteer_id'] : 0;

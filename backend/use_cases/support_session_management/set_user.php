@@ -1,5 +1,5 @@
 <?php
-require 'config.php';
+require __DIR__ . '/../../general/config.php';
 
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 $stmt = $conn->prepare("SELECT id, name, role FROM users WHERE id = ?");
